@@ -35,8 +35,8 @@ class PlayState(GameState):
         self.snake.update(time)
 
     def draw(self, renderer: Renderer) -> None:
-        self.snake.draw(renderer)
         self.food.draw(renderer)
+        self.snake.draw(renderer)
 
     def state(self) -> 'GameState':
         return self

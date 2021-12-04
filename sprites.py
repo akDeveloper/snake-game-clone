@@ -19,7 +19,6 @@ class Food(Sprite):
     def draw(self, renderer: Renderer) -> None:
         renderer.draw(self.image, self.rect, Rect(0, 0, 10, 10))
 
-
 class Snake(Sprite):
     def __init__(self, screen: tuple):
         super().__init__()

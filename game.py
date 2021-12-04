@@ -1,3 +1,6 @@
+from pygame import Vector2
+from pygame.sprite import collide_rect
+from pygame import Rect
 from engine import GameState
 from controls import Input
 from renderer import Renderer
@@ -42,8 +45,18 @@ class PlayState(GameState):
         return self
 
     def __create_food(self) -> None:
+        rect: Rect = self.__get_random_point()
+        # Do not create food over the Snake tail
+        while rect.collidelist(self.snake.tail) != -1:
+            rect: Rect = self.__get_random_point()
+        self.food = Food(rect.left, rect.top)
+    
+    def __get_random_point(self) -> Rect:
         x = randrange(self.screen[0] - 10)
         y = randrange(self.screen[1] - 10)
         x = round(x / 10, 0) * 10
         y = round(y / 10, 0) * 10
-        self.food = Food(x, y)
+        return Rect(x, y, 10, 10)
+
+
+    

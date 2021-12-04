@@ -1,5 +1,5 @@
 from pygame.sprite import Sprite
-from pygame.draw import rect
+from pygame import draw
 from pygame import Rect, Surface
 from controls import Input
 from renderer import Renderer
@@ -11,7 +11,7 @@ class Food(Sprite):
         self.image = Surface((10, 10))
         self.image.fill((200, 100, 100))
         self.rect = self.image.get_rect(topleft=(x, y))
-        rect(self.image, (200, 100, 100), Rect(0, 0, 10, 10), 1)
+        draw.rect(self.image, (200, 100, 100), Rect(0, 0, 10, 10), 1)
 
     def update(self, time: int) -> None:
         pass
@@ -30,7 +30,7 @@ class Snake(Sprite):
         self.body = Surface((10, 10)) # Body image
         self.body.fill((100, 100, 200))        
         self.rect = self.image.get_rect(topleft=(0, 0))
-        rect(self.image, (100, 100, 100), Rect(0, 0, 10, 10), 1)
+        draw.rect(self.image, (100, 100, 100), Rect(0, 0, 10, 10), 1)
         self.dir_x = 0
         self.dir_y = 0
         self.tail: list = []

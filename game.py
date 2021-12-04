@@ -2,6 +2,7 @@ from engine import GameState
 from controls import Input
 from renderer import Renderer
 from sprites import Food, Snake
+from random import randrange
 
 class LoadState(GameState):
     def __init__(self, renderer: Renderer) -> None:
@@ -22,14 +23,16 @@ class LoadState(GameState):
 
 class PlayState(GameState):
     def __init__(self, renderer: Renderer):
-        self.snake = Snake(renderer.screen())
-        self.food = Food()
+        self.screen = renderer.screen()
+        self.snake = Snake(self.screen)
+        self.__create_food()
 
     def update(self, time: int, input: Input) -> None:
         self.snake.set_input(input)
-        self.snake.update(time)
         if self.snake.rect.colliderect(self.food.rect):
-            self.snake.eat(self.food.rect)
+            self.snake.eat(self.food.rect.copy())
+            self.__create_food()
+        self.snake.update(time)
 
     def draw(self, renderer: Renderer) -> None:
         self.snake.draw(renderer)
@@ -39,4 +42,8 @@ class PlayState(GameState):
         return self
 
     def __create_food(self) -> None:
-        self.food = Food()
+        x = randrange(self.screen[0] - 10)
+        y = randrange(self.screen[1] - 10)
+        x = round(x / 10, 0) * 10
+        y = round(y / 10, 0) * 10
+        self.food = Food(x, y)

@@ -6,11 +6,11 @@ from renderer import Renderer
 from pygame.math import Vector2
 
 class Food(Sprite):
-    def __init__(self):
+    def __init__(self, x: int, y: int):
         super().__init__()
         self.image = Surface((10, 10))
         self.image.fill((200, 100, 100))
-        self.rect = self.image.get_rect(topleft=(200, 100))
+        self.rect = self.image.get_rect(topleft=(x, y))
         rect(self.image, (200, 100, 100), Rect(0, 0, 10, 10), 1)
 
     def update(self, time: int) -> None:
@@ -35,15 +35,15 @@ class Snake(Sprite):
         self.dir_x = 0
         self.dir_y = 0
         self.tail: list = []
+        self.tail_length = 1
 
     def set_input(self, input: Input) -> None:
         self.input = input
 
     def eat(self, food: Rect) -> None:
-        self.tail.append(food)
+        self.tail_length += 1
 
     def update(self, time: int) -> None:
-        vel = Vector2(0, 0)
         dir = self.input.get_direction()
         # TODO: Do not go to opposite direction if snake tail is grater than 1
         if dir.x != 0:
@@ -71,7 +71,7 @@ class Snake(Sprite):
         # 2. Game over id intersect with other elements of the body.
 
         self.tail.append(Rect(self.rect))
-        if len(self.tail) > 1:
+        if len(self.tail) > self.tail_length:
             del self.tail[0]
 
     def draw(self, renderer: Renderer) -> None:

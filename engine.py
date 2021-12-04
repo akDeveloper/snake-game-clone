@@ -7,7 +7,6 @@ from controls import Controller, Input
 from pygame import USEREVENT
 from pygame.mouse import set_visible
 
-
 class GameState(object):
     def __init__(self):
         pass

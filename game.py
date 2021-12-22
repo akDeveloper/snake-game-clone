@@ -1,4 +1,3 @@
-from pygame import Vector2
 from pygame.sprite import collide_rect
 from pygame import Rect
 from engine import GameState

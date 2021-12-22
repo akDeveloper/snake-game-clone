@@ -67,7 +67,7 @@ class Snake(Sprite):
 
         # TODO: Check intersection with its body
         # 1. Decrease tail if the last element of tail is beaten.
-        # 2. Game over id intersect with other elements of the body.
+        # 2. Game over if intersect with other elements of the body.
 
         self.tail.append(Rect(self.rect))
         if len(self.tail) > self.tail_length:

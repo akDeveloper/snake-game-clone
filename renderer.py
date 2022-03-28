@@ -4,34 +4,24 @@ from pygame.display import set_mode, update
 from enum import Enum
 
 
-class SpriteRegistry(Enum):
-    BACKGROUND = 0
-    CRAFT = 1
-    BULLET = 2
-    ASTEROID = 3
-    EXPLOSION = 4
-    FONTS = 5
-    POWERUP = 6
-
-
 class Renderer(object):
     def __init__(self, bb_width: int, bb_height: int, sc_width: int, sc_height: int, fullscreen: bool = False):
-        pass
+        raise RuntimeError("Can not instatiate")
 
     def draw_to_screen(self) -> None:
-        pass
+        raise NotImplementedError("Implement `draw_to_screen` method.")
 
     def cls(self) -> None:
-        pass
+        raise NotImplementedError("Implement `cls` method.")
 
     def register_image(self, name: int, filepath: str) -> None:
-        pass
+        raise NotImplementedError("Implement `register_image` method.")
 
     def draw(self, name: int, src: Rect, dest: Rect) -> None:
-        pass
+        raise NotImplementedError("Implement `draw` method.")
 
     def screen(self) -> tuple:
-        pass
+        raise NotImplementedError("Implement `screen` method.")
 
 
 class SdlRenderer(Renderer):
@@ -56,11 +46,11 @@ class SdlRenderer(Renderer):
     def cls(self) -> None:
         self.__backbuffer.fill((21, 21, 21))
 
-    def register_image(self, spr: SpriteRegistry, filepath: str) -> None:
-        self.__images.insert(spr.value, image.load(filepath).convert_alpha())
+    def register_image(self, spr: int, filepath: str) -> None:
+        self.__images.insert(spr, image.load(filepath).convert_alpha())
 
-    def draw(self, spr: SpriteRegistry, src: Rect, dest: Rect, flags: int = 0) -> None:
-        self.__backbuffer.blit(self.__images[spr.value], dest, src, flags)
+    def draw(self, spr: int, src: Rect, dest: Rect, flags: int = 0) -> None:
+        self.__backbuffer.blit(self.__images[spr], dest, src, flags)
 
     def draw(self, image: Surface, dest: Rect, src: Rect, flags: int = 0) -> None:
         self.__backbuffer.blit(image, dest, src, flags)

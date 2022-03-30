@@ -20,21 +20,23 @@ class Food(Sprite):
         renderer.draw(self.image, self.rect, Rect(0, 0, 10, 10))
 
 class Snake(Sprite):
-    def __init__(self, screen: tuple):
+    def __init__(self, screen: tuple, boundaries: list):
         super().__init__()
+        self.__is_alive = True
         self.screen: tuple = screen
         self.input: Input = None
         self.speed = 10
         self.image = Surface((10, 10)) # Head image
         self.image.fill((100, 100, 100))
         self.body = Surface((10, 10)) # Body image
-        self.body.fill((100, 100, 200))        
-        self.rect = self.image.get_rect(topleft=(0, 0))
+        self.body.fill((100, 100, 200))
+        self.rect = self.image.get_rect(topleft=(100, 100))
         draw.rect(self.image, (100, 100, 100), Rect(0, 0, 10, 10), 1)
         self.dir_x = 0
         self.dir_y = 0
         self.tail: list = []
         self.tail_length = 1
+        self.__boundaries = boundaries
 
     def set_input(self, input: Input) -> None:
         self.input = input
@@ -54,6 +56,11 @@ class Snake(Sprite):
 
         self.rect.left += self.dir_x * self.speed
         self.rect.top += self.dir_y * self.speed
+
+        # Collide for boundaries
+        if self.__collide() is True:
+            self.__is_alive = False
+            return
 
         # TODO: Fix boundaries of level and do not allow to teleport from edges
         if self.rect.right < self.rect.width * -1:
@@ -79,3 +86,12 @@ class Snake(Sprite):
                 renderer.draw(self.body, t, Rect(0, 0, 10, 10))
             else:
                 renderer.draw(self.image, t, Rect(0, 0, 10, 10))
+
+    def is_alive(self) -> bool:
+        return self.__is_alive
+
+    def __collide(self) -> bool:
+        for b in self.__boundaries:
+            if self.rect.colliderect(b):
+                return True
+        return False

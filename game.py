@@ -25,8 +25,14 @@ class LoadState(GameState):
 
 class PlayState(GameState):
     def __init__(self, renderer: Renderer):
+        self.renderer = renderer
         self.screen = renderer.screen()
-        self.snake = Snake(self.screen)
+        self.__boundaries = [
+            Rect(0, 0, 310, 10),                          #  -
+            Rect(0, 10, 10, 220), Rect(310, 0, 10, 240),  # | |
+            Rect(0, 220, 310, 10),                        #  -
+        ]
+        self.snake = Snake(self.screen, self.__boundaries)
         self.__create_food()
 
     def update(self, time: int, input: Input) -> None:
@@ -41,6 +47,8 @@ class PlayState(GameState):
         self.snake.draw(renderer)
 
     def state(self) -> 'GameState':
+        if self.snake.is_alive() is False:
+            return PlayState(self.renderer)
         return self
 
     def __create_food(self) -> None:
@@ -49,13 +57,11 @@ class PlayState(GameState):
         while rect.collidelist(self.snake.tail) != -1:
             rect: Rect = self.__get_random_point()
         self.food = Food(rect.left, rect.top)
-    
+
     def __get_random_point(self) -> Rect:
-        x = randrange(self.screen[0] - 10)
-        y = randrange(self.screen[1] - 10)
+        x = randrange(self.screen[0] - 20)
+        y = randrange(self.screen[1] - 20)
         x = round(x / 10, 0) * 10
         y = round(y / 10, 0) * 10
         return Rect(x, y, 10, 10)
 
-
-    

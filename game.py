@@ -25,12 +25,13 @@ class LoadState(GameState):
 
 class PlayState(GameState):
     def __init__(self, renderer: Renderer):
+        block = 10
         self.renderer = renderer
         self.screen = renderer.screen()
         self.__boundaries = [
-            Rect(0, 0, 310, 10),                          #  -
-            Rect(0, 10, 10, 220), Rect(310, 0, 10, 240),  # | |
-            Rect(0, 230, 310, 10),                        #  -
+            Rect(0, 0, 320 - block, block),
+            Rect(0, block, block, 240 - (2 * block)), Rect(320 - block, 0, block, 240),
+            Rect(0, 240 - block, 320 - block, block),
         ]
         self.level = Level(self.__boundaries)
         self.snake = Snake(self.screen, self.__boundaries)

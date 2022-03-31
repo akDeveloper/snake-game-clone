@@ -1,3 +1,4 @@
+import pygame
 from pygame.sprite import Sprite
 from pygame import draw
 from pygame import Rect, Surface
@@ -5,17 +6,19 @@ from controls import Input
 from renderer import Renderer
 from pygame.math import Vector2
 
+BLOCK = 10
+
 class Level(Sprite):
     def __init__(self, boundaries: list):
         color = (150, 150, 150)
         self.__boundaries = boundaries
-        self.__top = Surface((310, 10))
+        self.__top = Surface((320 - BLOCK, BLOCK))
         self.__top.fill(color)
-        self.__left = Surface((10, 220))
+        self.__left = Surface((BLOCK, 240 - (2 * BLOCK)))
         self.__left.fill(color)
-        self.__right = Surface((10, 240))
+        self.__right = Surface((BLOCK, 240))
         self.__right.fill(color)
-        self.__bottom = Surface((310, 10))
+        self.__bottom = Surface((320 - BLOCK, BLOCK))
         self.__bottom.fill(color)
 
     def update(self, time: int) -> None:
@@ -30,16 +33,16 @@ class Level(Sprite):
 class Food(Sprite):
     def __init__(self, x: int, y: int):
         super().__init__()
-        self.image = Surface((10, 10))
+        self.image = Surface((BLOCK, BLOCK))
         self.image.fill((200, 100, 100))
         self.rect = self.image.get_rect(topleft=(x, y))
-        draw.rect(self.image, (200, 100, 100), Rect(0, 0, 10, 10), 1)
+        draw.rect(self.image, (200, 100, 100), Rect(0, 0, BLOCK, BLOCK), 1)
 
     def update(self, time: int) -> None:
         pass
 
     def draw(self, renderer: Renderer) -> None:
-        renderer.draw(self.image, self.rect, Rect(0, 0, 10, 10))
+        renderer.draw(self.image, self.rect, Rect(0, 0, BLOCK, BLOCK))
 
 class Snake(Sprite):
     def __init__(self, screen: tuple, boundaries: list):
@@ -47,13 +50,13 @@ class Snake(Sprite):
         self.__is_alive = True
         self.screen: tuple = screen
         self.input: Input = None
-        self.speed = 10
-        self.image = Surface((10, 10)) # Head image
+        self.speed = BLOCK
+        self.image = Surface((BLOCK,  BLOCK)) # Head image
         self.image.fill((100, 100, 100))
-        self.body = Surface((10, 10)) # Body image
+        self.body = Surface((BLOCK, BLOCK)) # Body image
         self.body.fill((100, 100, 200))
         self.rect = self.image.get_rect(topleft=(100, 100))
-        draw.rect(self.image, (100, 100, 100), Rect(0, 0, 10, 10), 1)
+        draw.rect(self.image, (100, 100, 100), Rect(0, 0, BLOCK, BLOCK), 1)
         self.dir_x = 0
         self.dir_y = 0
         self.tail: list = []
@@ -93,8 +96,15 @@ class Snake(Sprite):
             return
 
         # TODO: Check intersection with its body
-        # 1. Decrease tail if the last element of tail is beaten.
-        # 2. Game over if intersect with other elements of the body.
+        # Decrease tail if the last element of tail is beaten.
+
+        # Game over if intersect with other elements of the body.
+        for i, t in enumerate(self.tail):
+            if (i == self.tail_length - 1):
+                continue
+            if t.colliderect(self.rect):
+                self.__is_alive = False
+                return
 
         self.tail.append(Rect(self.rect))
         if len(self.tail) > self.tail_length:
@@ -103,9 +113,9 @@ class Snake(Sprite):
     def draw(self, renderer: Renderer) -> None:
         for t in self.tail:
             if t != self.rect:
-                renderer.draw(self.body, t, Rect(0, 0, 10, 10))
+                renderer.draw(self.body, t, Rect(0, 0, BLOCK, BLOCK))
             else:
-                renderer.draw(self.image, t, Rect(0, 0, 10, 10))
+                renderer.draw(self.image, self.rect, Rect(0, 0, BLOCK, BLOCK))
 
     def is_alive(self) -> bool:
         return self.__is_alive

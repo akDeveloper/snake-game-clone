@@ -70,7 +70,7 @@ class Snake(Sprite):
         if self.__is_alive is False:
             return
         dir = self.input.get_direction()
-        # TODO: Do not go to opposite direction if snake tail is grater than 1
+        # Do not go to opposite direction if snake tail is grater than 1
         if dir.x != 0:
             if self.dir_y == 0 and self.dir_x != dir.x and self.tail_length > 1:
                 pass
@@ -91,16 +91,6 @@ class Snake(Sprite):
         if self.__collide() is True:
             self.__is_alive = False
             return
-
-        # TODO: Fix boundaries of level and do not allow to teleport from edges
-        if self.rect.right < self.rect.width * -1:
-            self.rect.left = self.screen[0]
-        elif self.rect.left > self.screen[0]:
-            self.rect.right = 0
-        elif self.rect.bottom < 0:
-            self.rect.top = self.screen[1]
-        elif self.rect.top > self.screen[1]:
-            self.rect.bottom = 0
 
         # TODO: Check intersection with its body
         # 1. Decrease tail if the last element of tail is beaten.

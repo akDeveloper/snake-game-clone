@@ -55,7 +55,7 @@ class PlayState(GameState):
 
     def __create_food(self) -> None:
         rect: Rect = self.__get_random_point()
-        # Do not create food over the Snake tail
+        # Do not create food over the Snake tail or Level boundaries
         while rect.collidelist(self.snake.tail) != -1 or rect.collidelist(self.__boundaries) != -1:
             rect: Rect = self.__get_random_point()
         self.food = Food(rect.left, rect.top)

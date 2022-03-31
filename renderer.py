@@ -17,7 +17,7 @@ class Renderer(object):
     def register_image(self, name: int, filepath: str) -> None:
         raise NotImplementedError("Implement `register_image` method.")
 
-    def draw(self, name: int, src: Rect, dest: Rect) -> None:
+    def draw(self, image: Surface, dest: Rect, src: Rect = None, flags: int = 0) -> None:
         raise NotImplementedError("Implement `draw` method.")
 
     def screen(self) -> tuple:
@@ -49,10 +49,7 @@ class SdlRenderer(Renderer):
     def register_image(self, spr: int, filepath: str) -> None:
         self.__images.insert(spr, image.load(filepath).convert_alpha())
 
-    def draw(self, spr: int, src: Rect, dest: Rect, flags: int = 0) -> None:
-        self.__backbuffer.blit(self.__images[spr], dest, src, flags)
-
-    def draw(self, image: Surface, dest: Rect, src: Rect, flags: int = 0) -> None:
+    def draw(self, image: Surface, dest: Rect, src: Rect = None, flags: int = 0) -> None:
         self.__backbuffer.blit(image, dest, src, flags)
 
     def screen(self) -> tuple:

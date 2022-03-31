@@ -5,6 +5,28 @@ from controls import Input
 from renderer import Renderer
 from pygame.math import Vector2
 
+class Level(Sprite):
+    def __init__(self, boundaries: list):
+        color = (150, 150, 150)
+        self.__boundaries = boundaries
+        self.__top = Surface((310, 10))
+        self.__top.fill(color)
+        self.__left = Surface((10, 220))
+        self.__left.fill(color)
+        self.__right = Surface((10, 240))
+        self.__right.fill(color)
+        self.__bottom = Surface((310, 10))
+        self.__bottom.fill(color)
+
+    def update(self, time: int) -> None:
+        pass
+
+    def draw(self, renderer: Renderer) -> None:
+        renderer.draw(self.__top, self.__boundaries[0])
+        renderer.draw(self.__left, self.__boundaries[1])
+        renderer.draw(self.__right, self.__boundaries[2])
+        renderer.draw(self.__bottom, self.__boundaries[3])
+
 class Food(Sprite):
     def __init__(self, x: int, y: int):
         super().__init__()
@@ -45,14 +67,22 @@ class Snake(Sprite):
         self.tail_length += 1
 
     def update(self, time: int) -> None:
+        if self.__is_alive is False:
+            return
         dir = self.input.get_direction()
         # TODO: Do not go to opposite direction if snake tail is grater than 1
         if dir.x != 0:
-            self.dir_y = 0
-            self.dir_x = dir.x
+            if self.dir_y == 0 and self.dir_x != dir.x and self.tail_length > 1:
+                pass
+            else:
+                self.dir_y = 0
+                self.dir_x = dir.x
         elif dir.y != 0:
-            self.dir_x = 0
-            self.dir_y = dir.y
+            if self.dir_x == 0 and self.dir_y != dir.y and self.tail_length > 1:
+                pass
+            else:
+                self.dir_x = 0
+                self.dir_y = dir.y
 
         self.rect.left += self.dir_x * self.speed
         self.rect.top += self.dir_y * self.speed

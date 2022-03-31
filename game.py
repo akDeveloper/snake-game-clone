@@ -3,7 +3,7 @@ from pygame import Rect
 from engine import GameState
 from controls import Input
 from renderer import Renderer
-from sprites import Food, Snake
+from sprites import Food, Snake, Level
 from random import randrange
 
 class LoadState(GameState):
@@ -30,8 +30,9 @@ class PlayState(GameState):
         self.__boundaries = [
             Rect(0, 0, 310, 10),                          #  -
             Rect(0, 10, 10, 220), Rect(310, 0, 10, 240),  # | |
-            Rect(0, 220, 310, 10),                        #  -
+            Rect(0, 230, 310, 10),                        #  -
         ]
+        self.level = Level(self.__boundaries)
         self.snake = Snake(self.screen, self.__boundaries)
         self.__create_food()
 
@@ -45,6 +46,7 @@ class PlayState(GameState):
     def draw(self, renderer: Renderer) -> None:
         self.food.draw(renderer)
         self.snake.draw(renderer)
+        self.level.draw(renderer)
 
     def state(self) -> 'GameState':
         if self.snake.is_alive() is False:
@@ -54,7 +56,7 @@ class PlayState(GameState):
     def __create_food(self) -> None:
         rect: Rect = self.__get_random_point()
         # Do not create food over the Snake tail
-        while rect.collidelist(self.snake.tail) != -1:
+        while rect.collidelist(self.snake.tail) != -1 or rect.collidelist(self.__boundaries) != -1:
             rect: Rect = self.__get_random_point()
         self.food = Food(rect.left, rect.top)
 
